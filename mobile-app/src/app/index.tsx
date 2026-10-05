@@ -1,101 +1,109 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+// Home screen: "Choose a Category" and the nine category tiles.
+// All wording here is copied exactly from mywordsmatter.app.
+// Step 3a: the tiles are not tappable yet.
+
+import { ScrollView, StyleSheet, Text, useColorScheme, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import { CategoryIcon, CategoryIconName } from '@/components/category-icons';
+import { Colors, Fonts } from '@/constants/colors';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+const CATEGORIES: { label: string; icon: CategoryIconName }[] = [
+  { label: 'Single PEC Selector', icon: 'single-pec-selector' },
+  { label: 'Sentence Creator', icon: 'sentence-creator' },
+  { label: 'In An Emergency', icon: 'emergency-cards' },
+  { label: "Today's Schedule", icon: 'todays-schedule' },
+  { label: 'Daily Task Checklist', icon: 'daily-schedule' },
+  { label: 'Detailed Daily Chore List', icon: 'chore-list' },
+  { label: 'Weekly Chore List', icon: 'weekly-chore-list' },
+  { label: 'First / Then', icon: 'first-then' },
+  { label: 'Consequence / Reward', icon: 'consequence-reward' },
+];
+
+const GAP = 16; // space between tiles, same as the website
+const SIDE_PADDING = 24;
+const MAX_GRID_WIDTH = 560; // keeps tiles from getting huge on tablets
 
 export default function HomeScreen() {
+  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
+  const colors = Colors[scheme];
+  const { width } = useWindowDimensions();
+
+  // Two tiles per row, sized to fit the screen.
+  const gridWidth = Math.min(width - SIDE_PADDING * 2, MAX_GRID_WIDTH);
+  const tileWidth = (gridWidth - GAP) / 2;
+
   return (
-    <ThemedView style={[styles.container, styles.background]}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Howdy&nbsp;Partner
-          </ThemedText>
-        </ThemedView>
+    <SafeAreaView style={[styles.screen, { backgroundColor: colors.bg }]}>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={[styles.appTitle, { color: colors.text }]} accessibilityRole="header">
+          My Words Matter
+        </Text>
 
-        <ThemedText type="code" style={styles.code}>
-          let's go
-        </ThemedText>
+        <Text style={[styles.heading, { color: colors.text }]} accessibilityRole="header">
+          Choose a Category
+        </Text>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+        <View style={[styles.grid, { width: gridWidth }]}>
+          {CATEGORIES.map((category) => (
+            <View
+              key={category.icon}
+              accessible
+              accessibilityLabel={category.label}
+              style={[styles.tile, { width: tileWidth, borderColor: colors.border }]}>
+              <CategoryIcon
+                name={category.icon}
+                color={category.icon === 'emergency-cards' ? colors.error : colors.text}
+              />
+              <Text style={[styles.tileLabel, { color: colors.text }]}>{category.label}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
   },
-  background: {
-    backgroundColor: '#ffffff',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
+  content: {
     alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    paddingHorizontal: SIDE_PADDING,
+    paddingTop: 16,
+    paddingBottom: 40,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+  appTitle: {
+    fontFamily: Fonts.black,
+    fontSize: 22,
+    marginBottom: 24,
   },
-  title: {
+  heading: {
+    fontFamily: Fonts.extraBold,
+    fontSize: 30,
     textAlign: 'center',
+    marginBottom: 32,
   },
-  code: {
-    textTransform: 'uppercase',
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: GAP,
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  tile: {
+    minHeight: 120,
+    paddingVertical: 20,
+    paddingHorizontal: 12,
+    borderWidth: 3,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+  },
+  tileLabel: {
+    fontFamily: Fonts.bold,
+    fontSize: 17.6,
+    lineHeight: 23,
+    textAlign: 'center',
   },
 });
