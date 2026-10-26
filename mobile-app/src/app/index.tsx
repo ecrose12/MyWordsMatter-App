@@ -1,12 +1,14 @@
-// Home screen: "Choose a Category" and the nine category tiles.
+// Home screen: header row, "Choose a Category", and the nine category tiles.
 // All wording here is copied exactly from mywordsmatter.app.
-// Step 3a: the tiles are not tappable yet.
+// The category tiles are not tappable yet.
 
-import { ScrollView, StyleSheet, Text, useColorScheme, useWindowDimensions, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CategoryIcon, CategoryIconName } from '@/components/category-icons';
-import { Colors, Fonts } from '@/constants/colors';
+import { ThemeToggle } from '@/components/theme-toggle';
+import { Fonts } from '@/constants/colors';
+import { useTheme } from '@/context/theme';
 
 const CATEGORIES: { label: string; icon: CategoryIconName }[] = [
   { label: 'Single PEC Selector', icon: 'single-pec-selector' },
@@ -25,8 +27,7 @@ const SIDE_PADDING = 24;
 const MAX_GRID_WIDTH = 560; // keeps tiles from getting huge on tablets
 
 export default function HomeScreen() {
-  const scheme = useColorScheme() === 'dark' ? 'dark' : 'light';
-  const colors = Colors[scheme];
+  const { colors } = useTheme();
   const { width } = useWindowDimensions();
 
   // Two tiles per row, sized to fit the screen.
@@ -39,6 +40,11 @@ export default function HomeScreen() {
         <Text style={[styles.appTitle, { color: colors.text }]} accessibilityRole="header">
           My Words Matter
         </Text>
+
+        {/* Header buttons. The menu button will join the light/dark switch here. */}
+        <View style={[styles.headerRow, { width: gridWidth }]}>
+          <ThemeToggle />
+        </View>
 
         <Text style={[styles.heading, { color: colors.text }]} accessibilityRole="header">
           Choose a Category
@@ -77,6 +83,12 @@ const styles = StyleSheet.create({
   appTitle: {
     fontFamily: Fonts.black,
     fontSize: 22,
+    marginBottom: 16,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
     marginBottom: 24,
   },
   heading: {
