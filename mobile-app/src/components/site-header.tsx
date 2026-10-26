@@ -2,8 +2,8 @@
 //   Row 1: My Words Matter
 //   Row 2: Menu + light/dark switch on the left, Log In + Sign Up on the right
 //   Row 3: Introduce Myself + the pencil (edit) button
-// Working so far: the light/dark switch, Introduce Myself (speaks out loud),
-// and the pencil (opens "Edit Your Introduction").
+// Working so far: the menu, the light/dark switch, Introduce Myself (speaks
+// out loud), and the pencil (opens "Edit Your Introduction").
 // The other buttons are in place, with the same labels as the website,
 // and will be wired up in later steps.
 
@@ -12,6 +12,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { IntroEditor } from '@/components/intro-editor';
+import { NavMenu } from '@/components/nav-menu';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Fonts } from '@/constants/colors';
 import { useTheme } from '@/context/theme';
@@ -43,12 +44,7 @@ export function SiteHeader() {
       {/* Row 2 */}
       <View style={styles.row2}>
         <View style={styles.group}>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Menu"
-            style={[styles.squareButton, { backgroundColor: colors.bg, borderColor: colors.border }]}>
-            <Text style={[styles.menuIcon, { color: colors.text }]}>☰</Text>
-          </Pressable>
+          <NavMenu />
           <ThemeToggle />
         </View>
 
@@ -120,17 +116,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  squareButton: {
-    width: 48,
-    height: 48,
-    borderWidth: 3,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  menuIcon: {
-    fontSize: 20.8,
   },
   pill: {
     minHeight: 40,
