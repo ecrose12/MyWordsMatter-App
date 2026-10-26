@@ -2,8 +2,9 @@
 //   Row 1: My Words Matter
 //   Row 2: Menu + light/dark switch on the left, Log In + Sign Up on the right
 //   Row 3: Introduce Myself + the pencil (edit) button
-// Only the light/dark switch works so far. The other buttons are in place,
-// with the same labels as the website, and will be wired up in later steps.
+// Working so far: the light/dark switch and Introduce Myself (speaks out loud).
+// The other buttons are in place, with the same labels as the website,
+// and will be wired up in later steps.
 
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Fonts } from '@/constants/colors';
 import { useTheme } from '@/context/theme';
+import { speakIntroMessage } from '@/lib/intro-message';
 
 // Makes small buttons easier to tap without changing how they look.
 const EXTRA_TAP_AREA = { top: 4, bottom: 4, left: 4, right: 4 };
@@ -68,6 +70,7 @@ export function SiteHeader() {
       {/* Row 3 */}
       <View style={styles.row3}>
         <Pressable
+          onPress={speakIntroMessage}
           accessibilityRole="button"
           accessibilityLabel="Introduce myself"
           style={[
