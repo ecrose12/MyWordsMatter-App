@@ -3,6 +3,7 @@
 
 import {
   Lexend_400Regular,
+  Lexend_600SemiBold,
   Lexend_700Bold,
   Lexend_800ExtraBold,
   Lexend_900Black,
@@ -30,6 +31,7 @@ function AppShell() {
   const { scheme, colors, ready: themeReady } = useTheme();
   const [fontsLoaded, fontError] = useFonts({
     Lexend_400Regular,
+    Lexend_600SemiBold,
     Lexend_700Bold,
     Lexend_800ExtraBold,
     Lexend_900Black,

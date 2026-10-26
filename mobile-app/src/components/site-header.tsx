@@ -2,13 +2,16 @@
 //   Row 1: My Words Matter
 //   Row 2: Menu + light/dark switch on the left, Log In + Sign Up on the right
 //   Row 3: Introduce Myself + the pencil (edit) button
-// Working so far: the light/dark switch and Introduce Myself (speaks out loud).
+// Working so far: the light/dark switch, Introduce Myself (speaks out loud),
+// and the pencil (opens "Edit Your Introduction").
 // The other buttons are in place, with the same labels as the website,
 // and will be wired up in later steps.
 
+import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { IntroEditor } from '@/components/intro-editor';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Fonts } from '@/constants/colors';
 import { useTheme } from '@/context/theme';
@@ -20,6 +23,7 @@ const EXTRA_TAP_AREA = { top: 4, bottom: 4, left: 4, right: 4 };
 export function SiteHeader() {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
+  const [editorOpen, setEditorOpen] = useState(false);
 
   return (
     <View
@@ -82,12 +86,15 @@ export function SiteHeader() {
           </Text>
         </Pressable>
         <Pressable
+          onPress={() => setEditorOpen(true)}
           accessibilityRole="button"
           accessibilityLabel="Edit introduction message"
           style={[styles.roundButton, { backgroundColor: colors.bg, borderColor: colors.border }]}>
           <Text style={[styles.editIcon, { color: colors.text }]}>✎</Text>
         </Pressable>
       </View>
+
+      <IntroEditor visible={editorOpen} onClose={() => setEditorOpen(false)} />
     </View>
   );
 }
