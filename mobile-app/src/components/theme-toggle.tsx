@@ -1,5 +1,5 @@
 // The lightbulb button that switches between light and dark mode.
-// Look and labels copied from mywordsmatter.app.
+// Look, size and labels copied from mywordsmatter.app (phone size).
 
 import { Pressable, StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -29,8 +29,8 @@ export function ThemeToggle() {
 
 const styles = StyleSheet.create({
   button: {
-    width: 56,
-    height: 56,
+    width: 48,
+    height: 48,
     borderWidth: 3,
     borderRadius: 12,
     alignItems: 'center',

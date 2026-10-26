@@ -1,12 +1,13 @@
-// Home screen: header row, "Choose a Category", and the nine category tiles.
+// Home screen: the header, "Choose a Category", and the nine category tiles.
 // All wording here is copied exactly from mywordsmatter.app.
+// The header stays at the top; the tiles scroll underneath it.
 // The category tiles are not tappable yet.
 
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { CategoryIcon, CategoryIconName } from '@/components/category-icons';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { SiteHeader } from '@/components/site-header';
 import { Fonts } from '@/constants/colors';
 import { useTheme } from '@/context/theme';
 
@@ -29,23 +30,17 @@ const MAX_GRID_WIDTH = 560; // keeps tiles from getting huge on tablets
 export default function HomeScreen() {
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
 
   // Two tiles per row, sized to fit the screen.
   const gridWidth = Math.min(width - SIDE_PADDING * 2, MAX_GRID_WIDTH);
   const tileWidth = (gridWidth - GAP) / 2;
 
   return (
-    <SafeAreaView style={[styles.screen, { backgroundColor: colors.bg }]}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.appTitle, { color: colors.text }]} accessibilityRole="header">
-          My Words Matter
-        </Text>
+    <View style={[styles.screen, { backgroundColor: colors.bg }]}>
+      <SiteHeader />
 
-        {/* Header buttons. The menu button will join the light/dark switch here. */}
-        <View style={[styles.headerRow, { width: gridWidth }]}>
-          <ThemeToggle />
-        </View>
-
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: insets.bottom + 40 }]}>
         <Text style={[styles.heading, { color: colors.text }]} accessibilityRole="header">
           Choose a Category
         </Text>
@@ -66,7 +61,7 @@ export default function HomeScreen() {
           ))}
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -77,19 +72,7 @@ const styles = StyleSheet.create({
   content: {
     alignItems: 'center',
     paddingHorizontal: SIDE_PADDING,
-    paddingTop: 16,
-    paddingBottom: 40,
-  },
-  appTitle: {
-    fontFamily: Fonts.black,
-    fontSize: 22,
-    marginBottom: 16,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginBottom: 24,
+    paddingTop: 32,
   },
   heading: {
     fontFamily: Fonts.extraBold,
