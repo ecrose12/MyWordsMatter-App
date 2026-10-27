@@ -41,6 +41,8 @@ export type ThemeColors = typeof Colors.light;
 // Lexend, the same font as the website. Each weight is its own font name.
 export const Fonts = {
   regular: 'Lexend_400Regular',
+  medium: 'Lexend_500Medium',
+  semiBold: 'Lexend_600SemiBold',
   bold: 'Lexend_700Bold',
   extraBold: 'Lexend_800ExtraBold',
   black: 'Lexend_900Black',

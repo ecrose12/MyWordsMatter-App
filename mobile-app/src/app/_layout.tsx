@@ -1,7 +1,10 @@
-// The frame around every screen: loads the Lexend font, then shows the app.
+// The frame around every screen: loads the Lexend font and the saved
+// light/dark choice, then shows the app.
 
 import {
   Lexend_400Regular,
+  Lexend_500Medium,
+  Lexend_600SemiBold,
   Lexend_700Bold,
   Lexend_800ExtraBold,
   Lexend_900Black,
@@ -12,31 +15,48 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
-// Keep the splash screen up until the font is ready, so text never "jumps".
+import { ThemeProvider, useTheme } from '@/context/theme';
+
+// Keep the splash screen up until everything is ready, so nothing "jumps".
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
+  return (
+    <ThemeProvider>
+      <AppShell />
+    </ThemeProvider>
+  );
+}
+
+function AppShell() {
+  const { scheme, colors, ready: themeReady } = useTheme();
+  const [fontsLoaded, fontError] = useFonts({
     Lexend_400Regular,
+    Lexend_500Medium,
+    Lexend_600SemiBold,
     Lexend_700Bold,
     Lexend_800ExtraBold,
     Lexend_900Black,
   });
+  const fontsReady = fontsLoaded || !!fontError;
 
   useEffect(() => {
-    if (loaded || error) {
+    if (fontsReady && themeReady) {
       SplashScreen.hideAsync();
     }
-  }, [loaded, error]);
+  }, [fontsReady, themeReady]);
 
-  if (!loaded && !error) {
+  if (!fontsReady || !themeReady) {
     return null;
   }
 
   return (
     <>
-      <StatusBar style="auto" />
-      <Stack screenOptions={{ headerShown: false }} />
+      {/* Phone's clock and battery icons: light on dark mode, dark on light mode */}
+      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+      <Stack
+        screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.bg } }}
+      />
     </>
   );
 }
