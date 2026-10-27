@@ -4,7 +4,8 @@
 // The menu closes when you tap ☰ again, tap anywhere outside it, or pick an item.
 //
 // Working so far: opening/closing, the About and Account lists, Home,
-// About My Words Matter, Meet the Creators, Coming Soon, Resource Links, and Settings.
+// About My Words Matter, Meet the Creators, Coming Soon, Resource Links, Settings,
+// and Contact Support.
 // The other items close the menu but don't go anywhere yet; their pages
 // will be added in later steps.
 
@@ -47,7 +48,9 @@ export function NavMenu() {
     router.navigate('/');
   }
 
-  function goTo(page: '/about' | '/team' | '/coming-soon' | '/resources' | '/settings') {
+  function goTo(
+    page: '/about' | '/team' | '/coming-soon' | '/resources' | '/settings' | '/support',
+  ) {
     closeMenu();
     router.navigate(page);
   }
@@ -128,7 +131,7 @@ export function NavMenu() {
             {divider}
             <MenuItem label="Settings" onPress={() => goTo('/settings')} textStyle={itemText} />
             {divider}
-            <MenuItem label="Contact Support" onPress={notBuiltYet} textStyle={itemText} />
+            <MenuItem label="Contact Support" onPress={() => goTo('/support')} textStyle={itemText} />
           </ScrollView>
         </View>
       </Modal>
