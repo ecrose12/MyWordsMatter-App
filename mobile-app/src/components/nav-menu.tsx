@@ -4,7 +4,7 @@
 // The menu closes when you tap ☰ again, tap anywhere outside it, or pick an item.
 //
 // Working so far: opening/closing, the About and Account lists, Home,
-// About My Words Matter, Meet the Creators, Coming Soon, and Resource Links.
+// About My Words Matter, Meet the Creators, Coming Soon, Resource Links, and Settings.
 // The other items close the menu but don't go anywhere yet; their pages
 // will be added in later steps.
 
@@ -47,7 +47,7 @@ export function NavMenu() {
     router.navigate('/');
   }
 
-  function goTo(page: '/about' | '/team' | '/coming-soon' | '/resources') {
+  function goTo(page: '/about' | '/team' | '/coming-soon' | '/resources' | '/settings') {
     closeMenu();
     router.navigate(page);
   }
@@ -66,7 +66,7 @@ export function NavMenu() {
         onPress={open ? closeMenu : openMenu}
         accessibilityRole="button"
         accessibilityLabel="Menu"
-        accessibilityState={{ expanded: open }}
+        aria-expanded={open}
         style={[styles.menuButton, { backgroundColor: colors.bg, borderColor: colors.border }]}>
         <Text style={[styles.menuIcon, { color: colors.text }]}>☰</Text>
       </Pressable>
@@ -126,7 +126,7 @@ export function NavMenu() {
               </View>
             )}
             {divider}
-            <MenuItem label="Settings" onPress={notBuiltYet} textStyle={itemText} />
+            <MenuItem label="Settings" onPress={() => goTo('/settings')} textStyle={itemText} />
             {divider}
             <MenuItem label="Contact Support" onPress={notBuiltYet} textStyle={itemText} />
           </ScrollView>
@@ -169,7 +169,7 @@ function ToggleItem({
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityState={{ expanded }}
+      aria-expanded={expanded}
       style={[styles.item, styles.toggleItem]}>
       <Text style={textStyle}>{label}</Text>
       <Text style={[textStyle, styles.caret]} accessibilityElementsHidden importantForAccessibility="no">
