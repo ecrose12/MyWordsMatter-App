@@ -12,6 +12,7 @@
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import type { ViewInstance } from 'react-native';
 
 import { Fonts } from '@/constants/colors';
 import { useTheme } from '@/context/theme';
@@ -23,7 +24,7 @@ type Position = { top: number; left: number };
 export function NavMenu() {
   const { colors } = useTheme();
   const { height: screenHeight } = useWindowDimensions();
-  const buttonRef = useRef<View>(null);
+  const buttonRef = useRef<ViewInstance>(null);
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<Position>({ top: 0, left: 0 });
   const [aboutOpen, setAboutOpen] = useState(false);
