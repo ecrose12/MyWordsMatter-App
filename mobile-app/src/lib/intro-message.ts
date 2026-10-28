@@ -1,10 +1,14 @@
 // The "Introduce Myself" message, working the same way as mywordsmatter.app:
 // - If a message has been saved on this phone, use it.
 // - Otherwise, use the default message below (same wording as the website).
-// Tapping "Introduce Myself" reads the message out loud with the phone's voice.
+// Tapping "Introduce Myself" reads the message out loud with the phone's voice,
+// in the language chosen on the Settings page (an app-only choice: the website
+// always uses the device's default voice here).
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Speech from 'expo-speech';
+
+import { loadTtsLanguage } from '@/lib/settings';
 
 // Same wording as the website.
 export const DEFAULT_INTRO_MESSAGE =
@@ -36,7 +40,7 @@ export async function saveIntroMessage(text: string): Promise<string> {
 
 // Stops anything already being spoken, then speaks the introduction from the start.
 export async function speakIntroMessage() {
-  const message = await loadIntroMessage();
+  const [message, language] = await Promise.all([loadIntroMessage(), loadTtsLanguage()]);
   await Speech.stop();
-  Speech.speak(message);
+  Speech.speak(message, { language });
 }

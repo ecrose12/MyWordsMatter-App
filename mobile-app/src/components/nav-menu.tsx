@@ -4,13 +4,15 @@
 // The menu closes when you tap ☰ again, tap anywhere outside it, or pick an item.
 //
 // Working so far: opening/closing, the About and Account lists, Home,
-// About My Words Matter, and Meet the Creators.
+// About My Words Matter, Meet the Creators, Coming Soon, Resource Links, Settings,
+// and Contact Support.
 // The other items close the menu but don't go anywhere yet; their pages
 // will be added in later steps.
 
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import type { ViewInstance } from 'react-native';
 
 import { Fonts } from '@/constants/colors';
 import { useTheme } from '@/context/theme';
@@ -22,7 +24,7 @@ type Position = { top: number; left: number };
 export function NavMenu() {
   const { colors } = useTheme();
   const { height: screenHeight } = useWindowDimensions();
-  const buttonRef = useRef<View>(null);
+  const buttonRef = useRef<ViewInstance>(null);
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<Position>({ top: 0, left: 0 });
   const [aboutOpen, setAboutOpen] = useState(false);
@@ -47,7 +49,9 @@ export function NavMenu() {
     router.navigate('/');
   }
 
-  function goTo(page: '/about' | '/team') {
+  function goTo(
+    page: '/about' | '/team' | '/coming-soon' | '/resources' | '/settings' | '/support',
+  ) {
     closeMenu();
     router.navigate(page);
   }
@@ -66,7 +70,7 @@ export function NavMenu() {
         onPress={open ? closeMenu : openMenu}
         accessibilityRole="button"
         accessibilityLabel="Menu"
-        accessibilityState={{ expanded: open }}
+        aria-expanded={open}
         style={[styles.menuButton, { backgroundColor: colors.bg, borderColor: colors.border }]}>
         <Text style={[styles.menuIcon, { color: colors.text }]}>☰</Text>
       </Pressable>
@@ -107,11 +111,11 @@ export function NavMenu() {
               <View style={[styles.subMenu, { borderLeftColor: colors.borderSubtle }]}>
                 <MenuItem label="About My Words Matter" onPress={() => goTo('/about')} textStyle={subItemText} sub />
                 <MenuItem label="Meet the Creators" onPress={() => goTo('/team')} textStyle={subItemText} sub />
-                <MenuItem label="Coming Soon" onPress={notBuiltYet} textStyle={subItemText} sub />
+                <MenuItem label="Coming Soon" onPress={() => goTo('/coming-soon')} textStyle={subItemText} sub />
               </View>
             )}
             {divider}
-            <MenuItem label="Resource Links" onPress={notBuiltYet} textStyle={itemText} />
+            <MenuItem label="Resource Links" onPress={() => goTo('/resources')} textStyle={itemText} />
             {divider}
             <ToggleItem
               label="Account"
@@ -126,9 +130,9 @@ export function NavMenu() {
               </View>
             )}
             {divider}
-            <MenuItem label="Settings" onPress={notBuiltYet} textStyle={itemText} />
+            <MenuItem label="Settings" onPress={() => goTo('/settings')} textStyle={itemText} />
             {divider}
-            <MenuItem label="Contact Support" onPress={notBuiltYet} textStyle={itemText} />
+            <MenuItem label="Contact Support" onPress={() => goTo('/support')} textStyle={itemText} />
           </ScrollView>
         </View>
       </Modal>
@@ -169,7 +173,7 @@ function ToggleItem({
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityState={{ expanded }}
+      aria-expanded={expanded}
       style={[styles.item, styles.toggleItem]}>
       <Text style={textStyle}>{label}</Text>
       <Text style={[textStyle, styles.caret]} accessibilityElementsHidden importantForAccessibility="no">
